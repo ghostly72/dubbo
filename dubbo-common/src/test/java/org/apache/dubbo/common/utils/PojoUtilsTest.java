@@ -51,6 +51,8 @@ import java.util.UUID;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -808,6 +810,16 @@ class PojoUtilsTest {
         Bgeneric<PersonInfo> ret = new Bgeneric();
         ret.setData(createPersonInfoByName(name));
         return ret;
+    }
+
+    @Test
+    void testRealizeListGenericElementType() {
+        List<Object> rawList = new ArrayList<>();
+        rawList.add(1); 
+        Type targetType = new TypeReference<List<String>>() {}.getType();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            PojoUtils.realize(rawList, List.class, targetType);
+        });
     }
 
     @Test
